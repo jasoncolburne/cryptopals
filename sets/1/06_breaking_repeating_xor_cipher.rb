@@ -107,12 +107,6 @@ def transpose_data(data, key_length)
   end
 end
 
-key_length_range = 2..64
-
-input = File.read(ARGV[0]).chomp.split("\n")
-base64_data = input.join
-data = Base64.strict_decode64(base64_data)
-
 def break_repeating_xor_cipher(cipher_text, key_length_range)
   normalized_hamming_distances_by_key_length = key_length_range.map do |key_length|
     raise "Key length too long to compute hamming distance of cipher text" if key_length * 4 > cipher_text.length
@@ -141,5 +135,11 @@ def break_repeating_xor_cipher(cipher_text, key_length_range)
   key = potential_clear_texts[potential_clear_texts.keys.min]
   Jason::Math::Cryptography.xor_cipher(cipher_text, key)
 end
+
+input = File.read(ARGV[0]).chomp.split("\n")
+base64_data = input.join
+data = Base64.strict_decode64(base64_data)
+
+key_length_range = 2..64
 
 puts break_repeating_xor_cipher(data, key_length_range)
