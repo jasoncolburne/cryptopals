@@ -1,0 +1,23 @@
+GIT
+  remote: https://github.com/jasoncolburne/jason-math
+  revision: cdf3ac8872e69bb8418a26afdd33025f07986e4c
+  branch: main
+  specs:
+    jason-math (0.1.0)
+      rb_heap
+      securerandom
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rb_heap (1.1.0)
+    securerandom (0.1.1)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  jason-math!
+
+BUNDLED WITH
+   2.2.33
