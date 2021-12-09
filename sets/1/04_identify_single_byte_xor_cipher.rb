@@ -50,7 +50,7 @@ def fuzzy_english_distance?(text)
   result = 0.0
 
   spaces_frequency = text.count(' ').to_f / text.length
-  result += 25.0 if spaces_frequency < 0.05
+  result += 0.25 if spaces_frequency < 0.05
 
   text = text.tr(' ', '')
 
@@ -75,18 +75,26 @@ def fuzzy_english_distance?(text)
   result
 end
 
+def break_single_byte_xor_cipher(cipher_text)
+  keys_by_english_distance = Hash.new { |h, k| h[k] = [] }
+
+  length = cipher_text.length
+  0.upto(255) do |n|
+    deciphered_data = (n.chr * length) ^ cipher_text
+    distance = fuzzy_english_distance?(deciphered_data)  
+    keys_by_english_distance[distance] << n.chr
+  end
+
+  minimum_distance = keys_by_english_distance.keys.min
+  [minimum_distance, keys_by_english_distance[minimum_distance]]
+end
+
 data = File.read(ARGV[0])
 input = data.chomp.split("\n")
 
-text_by_score = Hash.new { |h, k| h[k] = [] }
-input.each do |line|
-  cipher_text = line.hex_to_byte_string
-  length = cipher_text.length
-  0.upto(255) do |n|
-    deciphered_data = n.chr * length ^ cipher_text
-    probability = fuzzy_english_distance?(deciphered_data)  
-    text_by_score[probability] << [deciphered_data, line]
-  end
-end
+broken_ciphertexts = input.map(&:hex_to_byte_string).map do |cipher_text|
+  distance, keys = break_single_byte_xor_cipher(cipher_text)
+  [distance, (keys.first * cipher_text.length) ^ cipher_text]
+end.to_h
 
-pp text_by_score[text_by_score.keys.min]
+pp broken_ciphertexts[broken_ciphertexts.keys.min]
