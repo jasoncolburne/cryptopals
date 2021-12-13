@@ -14,25 +14,26 @@ YnkK
 EOT
 
 class Encryptor
-  def initialize(algorithm, key_length, secret_string)
+  def initialize(algorithm, key_length, secret_string, initialization_vector = nil)
     key = SecureRandom.random_bytes(key_length)
     @cipher = Jason::Math::Cryptography::Cipher.new(algorithm, key)
     @random_prefix = SecureRandom.random_bytes(SecureRandom.random_number(15) + 17)
     @secret_string = secret_string
+    @initialization_vector = initialization_vector
   end
 
   def encrypt(plain_text)
     message = @random_prefix + plain_text + @secret_string
-    @cipher.encrypt(message)
+    @cipher.encrypt(message, @initialization_vector)
   end
 end
 
-encryptor = Encryptor.new(:aes_192_ecb, 24, base64_string.base64_to_byte_string)
+encryptor = Encryptor.new(:aes_192_cbc, 24, base64_string.base64_to_byte_string, "\x00" * 16)
 block_size = Jason::Math::Cryptography::Cipher.block_size(encryptor)
 puts "block size: #{block_size}"
 ecb = Jason::Math::Cryptography::Cipher.detect_ecb?(encryptor.encrypt("A".b * 48))
 puts "ecb? #{ecb}"
-exit(1) unless ecb
+# exit(1) unless ecb
 
 extra_length = Jason::Math::Cryptography::Cipher.count_clear_text_extra_bytes(encryptor, block_size)
 prefix_length = Jason::Math::Cryptography::Cipher.count_clear_text_prefix_bytes(encryptor, block_size)
