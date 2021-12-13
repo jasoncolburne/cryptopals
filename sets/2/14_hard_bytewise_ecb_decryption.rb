@@ -17,7 +17,7 @@ class Encryptor
   def initialize(algorithm, key_length, secret_string, initialization_vector = nil)
     key = SecureRandom.random_bytes(key_length)
     @cipher = Jason::Math::Cryptography::Cipher.new(algorithm, key)
-    @random_prefix = SecureRandom.random_bytes(SecureRandom.random_number(15) + 17)
+    @random_prefix = SecureRandom.random_bytes(SecureRandom.random_number(16) + 16)
     @secret_string = secret_string
     @initialization_vector = initialization_vector
   end
