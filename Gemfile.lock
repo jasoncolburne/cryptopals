@@ -10,6 +10,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    curses (1.4.2)
     rb_heap (1.1.0)
     securerandom (0.1.1)
 
@@ -17,6 +18,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  curses
   jason-math!
 
 BUNDLED WITH
