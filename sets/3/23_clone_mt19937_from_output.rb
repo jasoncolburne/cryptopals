@@ -18,6 +18,6 @@ untempered_values = extracted_values.map { |value| Jason::Math::Cryptography::Me
 cloned_prng.splice_state(untempered_values)
 
 10.times do
-  puts "prng: #{prng.extract_number}"
-  puts "cloned_prng: #{cloned_prng.extract_number}"
+  puts "prng: #{prng.extract_number} (#{prng.index})"
+  puts "cloned_prng: #{cloned_prng.extract_number} (#{cloned_prng.index})"
 end
