@@ -4,6 +4,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'jason/math'
 
+puts "Sleeping for a random length of time, creating a MersenneTwister19937 prng and sleeping for more time..."
 sleep(SecureRandom.random_number(150) + 50)
 prng = Jason::Math::Cryptography::MersenneTwister19937.new(:mt19937, Time.now.to_i)
 sleep(SecureRandom.random_number(150) + 50)
@@ -21,8 +22,8 @@ while first_number != target
   seed -= 1
 end
 
-puts "found seed: #{seed}"
-puts ''
+puts "found seed: #{seed + 1}"
+puts
 
 10.times do
   puts "prng output: #{prng.extract_number}"

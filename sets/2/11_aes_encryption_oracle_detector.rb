@@ -13,7 +13,8 @@ def encryption_oracle(plain_text)
   message = SecureRandom.random_bytes(prefix_length)
   message << plain_text
   message << SecureRandom.random_bytes(suffix_length)
-  cipher.encrypt(message, SecureRandom.random_bytes(16))
+  cipher.initialization_vector = SecureRandom.random_bytes(16)
+  cipher.encrypt(message)
 end
 
 pp ((0..(ARGV[0].to_i - 1)).map do

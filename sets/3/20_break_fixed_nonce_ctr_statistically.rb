@@ -9,7 +9,7 @@ require 'curses'
 
 data = File.read(ARGV[0])
 
-class Encryptor
+class Cryptor
   def initialize
     key = SecureRandom.random_bytes(32)
     @nonce = "\x00" * 8
@@ -17,7 +17,11 @@ class Encryptor
   end
 
   def encrypt(clear_text)
-    @cipher.encrypt(clear_text, @nonce)
+    clear_text.to_blocks(16).each_with_index.map do |block, counter|
+      initialization_vector = @nonce + [counter].pack('Q<*')
+      @cipher.initialization_vector = initialization_vector
+      @cipher.encrypt(block)
+    end.join
   end
 end
 
@@ -30,8 +34,8 @@ class UI
   }
 
   def initialize(data)
-    @encryptor = Encryptor.new
-    @cipher_texts = data.chomp.split("\n").map(&:base64_to_byte_string).map { |sentence| @encryptor.encrypt(sentence) }
+    @cryptor = Cryptor.new
+    @cipher_texts = data.chomp.split("\n").map(&:base64_to_byte_string).map { |sentence| @cryptor.encrypt(sentence) }
 
     Curses.init_screen
     Curses.raw

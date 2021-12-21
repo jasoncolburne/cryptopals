@@ -19,7 +19,7 @@ MDAwMDA4b2xsaW4nIGluIG15IGZpdmUgcG9pbnQgb2g=
 MDAwMDA5aXRoIG15IHJhZy10b3AgZG93biBzbyBteSBoYWlyIGNhbiBibG93
 EOT
 
-class Encryptor
+class Cryptor
   def initialize(algorithm, key_length, messages)
     key = SecureRandom.random_bytes(key_length)
     @messages = messages
@@ -29,19 +29,21 @@ class Encryptor
   def encrypt(clear_text = nil)
     message = @messages[SecureRandom.random_number(@messages.count)]
     initialization_vector = SecureRandom.random_bytes(16)
-    [@cipher.encrypt(message, initialization_vector), initialization_vector]
+    @cipher.initialization_vector = initialization_vector
+    [@cipher.encrypt(message), initialization_vector]
   end
 
-  def decrypt(cipher_text, initialization_vector, strip_padding = true)
-    @cipher.decrypt(cipher_text, initialization_vector, strip_padding)
+  def decrypt(cipher_text, initialization_vector, strip_padding: true)
+    @cipher.initialization_vector = initialization_vector
+    @cipher.decrypt(cipher_text, strip_padding: strip_padding)
   end
 end
 
 messages = data.chomp("\n").split("\n").map { |line| line.base64_to_byte_string }
-encryptor = Encryptor.new(:aes_128_cbc, 16, messages)
+cryptor = Cryptor.new(:aes_128_cbc, 16, messages)
 
 lengths = (0..24).to_a.map do
-  cipher_text, initialization_vector = encryptor.encrypt
+  cipher_text, initialization_vector = cryptor.encrypt
   cipher_text.length
 end
 
@@ -93,12 +95,12 @@ def cbc_replace_offset_bytes(cipher_text, initialization_vector, bytes, index, b
 end
 
 padding_length = nil
-cipher_text, initialization_vector = encryptor.encrypt
+cipher_text, initialization_vector = cryptor.encrypt
 (1..block_size).each do |i|
   altered_cipher_text, altered_initialization_vector = xor_clear_text_bytes(cipher_text, initialization_vector, "\xff", -i, block_size)
 
   begin
-    encryptor.decrypt(altered_cipher_text, altered_initialization_vector)
+    cryptor.decrypt(altered_cipher_text, altered_initialization_vector)
     padding_length = i - 1
     break
   rescue
@@ -141,7 +143,7 @@ end
     altered_cipher_text, altered_initialization_vector = cbc_replace_offset_bytes(relevant_ciphertext, initialization_vector, payload, index, block_size)
 
     begin
-      encryptor.decrypt(altered_cipher_text, altered_initialization_vector)
+      cryptor.decrypt(altered_cipher_text, altered_initialization_vector)
 
       value = if xor_mask.length >= cipher_text_length - block_size
         altered_initialization_vector[index] ^ (padding_length + 1).chr
