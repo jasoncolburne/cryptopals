@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jasoncolburne/jason-math
-  revision: 61f9407f1165f79db21b968831edeee0b10cca57
+  revision: 9c1fb6fe55d96d12f9c8ea57655bc3c5cc812a49
   branch: main
   specs:
     jason-math (0.1.0)
@@ -10,8 +10,17 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (7.0.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
     ast (2.4.2)
+    concurrent-ruby (1.1.9)
     curses (1.4.2)
+    i18n (1.8.11)
+      concurrent-ruby (~> 1.0)
+    minitest (5.15.0)
     parallel (1.21.0)
     parser (3.0.3.2)
       ast (~> 2.4.1)
@@ -32,12 +41,15 @@ GEM
       parser (>= 3.0.1.1)
     ruby-progressbar (1.11.0)
     securerandom (0.1.1)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
     unicode-display_width (2.1.0)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport
   curses
   jason-math!
   rubocop
