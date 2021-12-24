@@ -26,7 +26,7 @@ mac_daddy = MacDaddy.new(:sha_1)
 
 message = 'comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon'
 mac = mac_daddy.terrible_mac(message)
-raise 'Cannot validate mac' unless mac_daddy.validate_mac(message, mac)
+raise 'cannot validate mac' unless mac_daddy.validate_mac(message, mac)
 
 puts 'unextended mac is validated'
 puts 'forging new message/mac pair'
