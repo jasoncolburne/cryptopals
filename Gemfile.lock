@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jasoncolburne/jason-math
-  revision: ab80de88cf168d7a1405d36143d9726c1806d020
+  revision: dc11841875786ff38f52b7bd2af0394026e5bebb
   branch: main
   specs:
     jason-math (0.1.0)
