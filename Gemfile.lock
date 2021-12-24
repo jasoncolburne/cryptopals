@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jasoncolburne/jason-math
-  revision: a6418d637089939fcfb45e4352edc3f4c63d7c7a
+  revision: ab80de88cf168d7a1405d36143d9726c1806d020
   branch: main
   specs:
     jason-math (0.1.0)
@@ -28,13 +28,13 @@ GEM
     rb_heap (1.1.0)
     regexp_parser (2.2.0)
     rexml (3.2.5)
-    rubocop (1.23.0)
+    rubocop (1.24.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 1.12.0, < 2.0)
+      rubocop-ast (>= 1.15.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.15.0)
