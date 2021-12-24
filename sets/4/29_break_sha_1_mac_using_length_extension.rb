@@ -35,7 +35,7 @@ digest = Jason::Math::Cryptography::Digest.new(:sha_1)
 digest.state = mac.unpack('N*')
 
 injected_message = ';admin=true'
-padded_message = Jason::Math::Cryptography::Digest.merkle_damgard_pad('x' * 16 + message)
+padded_message = Jason::Math::Cryptography::Digest.pad('x' * 16 + message)
 forged_message = padded_message[16..] + injected_message
 digest.cumulative_length = padded_message.length
 forged_mac = digest.digest(injected_message)
