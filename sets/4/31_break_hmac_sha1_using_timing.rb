@@ -15,7 +15,7 @@ signature = "\x00" * 20
     x = Time.now
     begin
       RestClient.post(url, file: File.new('./31_message.txt'), signature: signature.byte_string_to_hex)
-    rescue
+    rescue RestClient::InternalServerError # rubocop:disable Lint/SuppressedException
     end
     Time.now - x
   end
