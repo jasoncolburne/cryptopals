@@ -34,5 +34,5 @@ post '/test' do
   end
 
   status 200
-  body "signature valid!\n"
+  body "ok\n"
 end
