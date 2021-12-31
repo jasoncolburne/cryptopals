@@ -22,7 +22,7 @@ puts "encrypting the message using the :mt19937_64_stream cipher keyed/seeded wi
 cipher_text = cipher.encrypt(clear_text)
 
 def recover_key(cipher_text, known_clear_text)
-  cipher = Jason::Math::Cryptography::ExclusiveOrCipher.new(:mt19937_64_stream, 0)
+  cipher = Jason::Math::Cryptography::SymmetricKey::ExclusiveOrCipher.new(:mt19937_64_stream, 0)
 
   (0..@key_max_plus_one).each do |key|
     cipher.instance_variable_get(:@prng).seed = key
@@ -56,7 +56,7 @@ def break_tokens(token_a, token_b, time_range)
   decoded_tokens_a = {}
   decoded_tokens_b = {}
 
-  cipher = Jason::Math::Cryptography::ExclusiveOrCipher.new(:mt19937_64_stream, 0)
+  cipher = Jason::Math::Cryptography::SymmetricKey::ExclusiveOrCipher.new(:mt19937_64_stream, 0)
 
   puts "generating all clear_texts for each cipher_text using keys based on time range #{time_range}"
   upper_bound.downto(lower_bound).each do |key|
@@ -100,8 +100,8 @@ p "token b: '#{clear_text_b}'"
 p "common string: '#{substring}'"
 
 def generate_token
-  prng = Jason::Math::Cryptography::MersenneTwister19937.new(:mt19937_64, Time.now.to_i % @key_max_plus_one)
-  Jason::Math::Cryptography::PRNGByteStream.new(prng, 8).take_bytes(20)
+  prng = Jason::Math::Cryptography::PseudoRandomNumberGeneration::MersenneTwister19937.new(:mt19937_64, Time.now.to_i % @key_max_plus_one)
+  Jason::Math::Cryptography::PseudoRandomNumberGeneration::PRNGByteStream.new(prng, 8).take_bytes(20)
 end
 
 def generated_from_time_seeded_mt19937_64?(token, time_range)
@@ -110,8 +110,8 @@ def generated_from_time_seeded_mt19937_64?(token, time_range)
   lower_bound = time_range.first.to_i
   upper_bound = time_range.last.to_i
 
-  prng = Jason::Math::Cryptography::MersenneTwister19937.new(:mt19937_64, 0)
-  byte_stream = Jason::Math::Cryptography::PRNGByteStream.new(prng, 8)
+  prng = Jason::Math::Cryptography::PseudoRandomNumberGeneration::MersenneTwister19937.new(:mt19937_64, 0)
+  byte_stream = Jason::Math::Cryptography::PseudoRandomNumberGeneration::PRNGByteStream.new(prng, 8)
   upper_bound.downto(lower_bound).each do |key|
     prng.seed = key % @key_max_plus_one
     return true if byte_stream.take_bytes(token_length) == token

@@ -10,7 +10,7 @@ data = File.read(ARGV[0])
 cipher_text = data.base64_to_byte_string
 key = 'YELLOW SUBMARINE'
 
-cipher = Jason::Math::Cryptography::AdvancedEncryptionStandard.new(:ecb_128, key)
+cipher = Jason::Math::Cryptography::SymmetricKey::AdvancedEncryptionStandard.new(:ecb_128, key)
 clear_text = cipher.decrypt(cipher_text)
 
 class Cryptor

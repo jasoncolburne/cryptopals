@@ -8,7 +8,7 @@ require 'securerandom'
 require 'cgi'
 require 'sinatra'
 
-hmac = Jason::Math::Cryptography::HashedMessageAuthenticationCode.new(:sha_1, SecureRandom.random_bytes(64))
+hmac = Jason::Math::Cryptography::MessageAuthentication::HashedMessageAuthenticationCode.new(:sha_1, SecureRandom.random_bytes(64))
 
 post '/test' do
   tempfile = params[:file][:tempfile]
