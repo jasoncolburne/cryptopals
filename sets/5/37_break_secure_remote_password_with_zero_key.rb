@@ -35,8 +35,8 @@ Kc = sha.digest(0.to_byte_string)
 
 # server
 u = sha.digest(A.to_byte_string + B.to_byte_string).byte_string_to_integer
-Ss = (A * v.modular_exponentiation(u, N)).modular_exponentiation(b, N)
-Ks = sha.digest(Ss.to_byte_string)
+S = (A * v.modular_exponentiation(u, N)).modular_exponentiation(b, N)
+Ks = sha.digest(S.to_byte_string)
 
 tag = hmac.tag(Kc)
 valid_tag = hmac.tag(Ks)
