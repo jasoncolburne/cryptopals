@@ -14,4 +14,4 @@ raise 'could not decrypt 42 after encryption' unless 42 == rsa.decrypt(rsa.encry
   raise 'could not decrypt big number after encryption' unless number == rsa.decrypt(rsa.encrypt(number))
 end
 
-puts 'success!'
+puts rsa.decrypt(rsa.encrypt('success!'.byte_string_to_integer)).to_byte_string
