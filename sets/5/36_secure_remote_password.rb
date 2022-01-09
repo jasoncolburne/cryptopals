@@ -51,5 +51,7 @@ hmac = Cryptography::MessageAuthentication::HashedMessageAuthenticationCode.new(
 tag = hmac.tag(Kc)
 valid_tag = hmac.tag(Ks)
 
+# client ---tag--> server
+
 raise 'server failed to validate request' unless Cryptography.secure_compare(tag, valid_tag)
 puts 'password validated'
