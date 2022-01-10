@@ -11,6 +11,7 @@ SHA = Cryptography::Digest::SecureHashAlgorithm
 mode = ARGV[0].to_sym
 rsa = RSA.new(mode, nil, nil, 3)
 @sha = SHA.new(:'1')
+puts 'generating keypair...'
 rsa.generate_keypair!
 
 def pkcs1_pad(message, length)
