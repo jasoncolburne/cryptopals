@@ -8,7 +8,7 @@ require 'base64'
 class RSAParityOracle
   def initialize(mode)
     @rsa = Jason::Math::Cryptography::AsymmetricKey::RivestShamirAdleman.new(mode)
-    @n, d, @e = @rsa.generate_keypair!
+    @n, _, @e = @rsa.generate_keypair!
   end
 
   def parity(cipher_text)
