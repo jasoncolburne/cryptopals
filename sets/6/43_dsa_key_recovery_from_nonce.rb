@@ -19,12 +19,12 @@ s = 857042759984254168557880549501802188789837994940
 Cryptography = Jason::Math::Cryptography
 NumberTheory = Jason::Math::NumberTheory
 dsa = Cryptography::AsymmetricKey::DigitalSignatureAlgorithm.new(:sha_1, :'1024', p, q, g, nil, y)
-@sha = Cryptography::Digest::SecureHashAlgorithm.new(:'1')
+sha = Cryptography::Digest::SecureHashAlgorithm.new(:'1')
 
 raise 'could not verify signature' unless dsa.verify(message, r, s)
 puts 'verified signature'
 
-m = @sha.digest(message).byte_string_to_integer
+m = sha.digest(message).byte_string_to_integer
 x = nil
 (2..(2**16 - 1)).each do |k|
   x = ((s * k - m) * r.modular_inverse(q)) % q
@@ -39,4 +39,4 @@ end
 raise 'could not recover key' if x.nil?
 
 puts "recovered key: #{x}"
-puts 'sha1 fingerprint: ' + @sha.digest(x.to_s(16)).byte_string_to_hex
+puts 'sha1 fingerprint: ' + sha.digest(x.to_s(16)).byte_string_to_hex
