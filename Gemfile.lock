@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jasoncolburne/jason-math
-  revision: 6e4509b7472d59eb008c12df8d3219bb0296327f
+  revision: 0aa5811b3ee503c0c33b5e17743f36dc5ffff195
   branch: main
   specs:
     jason-math (0.1.0)
@@ -45,7 +45,7 @@ GEM
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
-    rainbow (3.0.0)
+    rainbow (3.1.1)
     rb_heap (1.1.0)
     regexp_parser (2.2.0)
     rest-client (2.1.0)
