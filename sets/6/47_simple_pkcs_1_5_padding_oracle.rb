@@ -40,7 +40,7 @@ class PKCSPaddingOracle
 end
 
 mode = ARGV[0].to_sym
-clear_text = 'kick it, CC'
+clear_text = ARGV[1]
 puts 'generating keys...'
 oracle = PKCSPaddingOracle.new(mode)
 puts 'encrypting message...'
@@ -79,12 +79,10 @@ B = 2**(8 * (k - 2))
 
 M_ = [[(2 * B), (3 * B - 1)]]
 
-puts 'finding a valid s value..'
 # iteration 1
-s = n / (3 * B)
-puts "starting value: #{s}"
-(s += 1; print '.') until oracle.valid?((c * s.modular_exponentiation(e, n)) % n)
-puts
+s = ceiling(n, 3 * B)
+puts "finding a valid s value beginning at #{s} (this can take a while)..."
+s += 1 until oracle.valid?((c * s.modular_exponentiation(e, n)) % n)
 puts "found s: #{s}"
 puts 'converging...'
 M = construct_M(M_, s, B, n)
@@ -95,10 +93,9 @@ while M.count > 1 || M[0][0] != M[0][1]
 
   if M.count == 1
     a, b = M[0]
-    puts b - a
-
     r = ceiling(2 * b * s_ - 4 * B, n)
     found = false
+
     loop do
       min = ceiling(2 * B + r * n, b)
       max = (3 * B + r * n - 1) / a # not positive about the -1 i threw in here
