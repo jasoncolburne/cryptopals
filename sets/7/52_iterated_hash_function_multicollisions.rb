@@ -152,7 +152,7 @@ def collide_composite(md, n)
     return [inputs_by_digest[digest], input] if inputs_by_digest.include?(digest)
     inputs_by_digest[digest] = input
   end
-  last_generation
+  raise 'could not find collision, increase n'
 end
 
 puts
