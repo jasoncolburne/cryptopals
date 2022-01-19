@@ -158,6 +158,6 @@ end
 puts
 puts 'finding a collision in composite hash function...'
 m1, m2 = collide_composite(md, 2**8)
-puts 'found a collision'
+puts 'found a collision for full digest'
 puts "m1: #{m1.byte_string_to_hex} (digest: #{md.poor_digest(m1, 0x01234567.to_byte_string).byte_string_to_hex})"
 puts "m2: #{m2.byte_string_to_hex} (digest: #{md.poor_digest(m2, 0x01234567.to_byte_string).byte_string_to_hex})"
