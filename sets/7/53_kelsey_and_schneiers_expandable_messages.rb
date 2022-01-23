@@ -48,31 +48,35 @@ class MerkleDamgardConstructionHash
   end
 end
 
-# interating instead of using random messages to collide is surely faster
+def increment(bytes)
+  length = bytes.length
+  (bytes.byte_string_to_integer + 1).to_byte_string.rjust(length, "\x00")
+end
+
 def collide_independent_states(md, state_a, state_b = 0x0123.to_byte_string)
   a = {}
   b = {}
 
+  message = "\x00" * 16
   loop do
-    message = SecureRandom.random_bytes(16)
     digest = md.digest(message, state_a, pad: false)
     return [digest, message, b[digest]] if b.include?(digest)
     a[digest] = message
 
-    message = SecureRandom.random_bytes(16)
     digest = md.digest(message, state_b, pad: false)
     return [digest, a[digest], message] if a.include?(digest)
     b[digest] = message
+
+    message = increment(message)
   end
 end
 
-def collide_state_to_states(md, initial_state, target_states)
-  block = SecureRandom.random_bytes(16)
+def collide_state_to_states(md, initial_state, target_states, k)
+  block = "\x00" * 16
   digest = initial_state
-  until target_states.include?(digest = md.digest(block, initial_state, pad: false)) do
-    block = SecureRandom.random_bytes(16)
-  end
-  [digest, block]
+  target_states_set = target_states.to_set
+  block = increment(block) until target_states_set.include?(digest = md.digest(block, initial_state, pad: false)) && target_states.index(digest) >= k
+  [target_states.index(digest), block]
 end
 
 def construct_n_block_message(components, n)
@@ -93,7 +97,9 @@ def construct_n_block_message(components, n)
 end
 
 k = ARGV[0].to_i
-message_length = SecureRandom.random_number((16 * 2**(k - 1))..(16 * 2**k))
+block_min = [k + 2, 2**(k-1)].max
+block_max = [2**k, block_min + 1].max
+message_length = SecureRandom.random_number((16 * block_min)..(16 * block_max))
 true_message = SecureRandom.random_bytes(message_length)
 md = MerkleDamgardConstructionHash.new
 true_digest = md.digest(true_message)
@@ -122,18 +128,29 @@ Cryptography::Cipher.split_into_blocks(true_message, 16).each do |block|
   previous_digest = md.digest(block, previous_digest, pad: block.length != 16)
   digests << previous_digest
 end
+digests.pop
 
 puts 'colliding glue block...'
 final_digest = message_components.last[:digest]
-digest, glue = collide_state_to_states(md, final_digest, digests.to_set)
-n = digests.index(digest)
+n = 0
+glue = nil
+while n < k
+  n, glue = collide_state_to_states(md, final_digest, digests, k)
+end
 
 puts 'constructing forgery...'
 forgery_base = construct_n_block_message(message_components, n)
+
+true_message_blocks = (true_message.length.to_f / 16).ceil
+forged_message_minimum_blocks = forgery_base.length / 16 + 2
+raise 'minimum expandable message overruns authentic message (choose larger k)' if forged_message_minimum_blocks > true_message_blocks
 
 forged_message = forgery_base + glue
 forged_message += true_message[(forged_message.length)..]
 forged_digest = md.digest(forged_message)
 
+puts "true message length: #{true_message.length}"
+puts "forged message length: #{forged_message.length}"
+puts "true suffix length: #{forged_message.length - forgery_base.length - 16}"
 puts "true digest: #{true_digest.byte_string_to_hex}"
 puts "forged digest: #{forged_digest.byte_string_to_hex}"
