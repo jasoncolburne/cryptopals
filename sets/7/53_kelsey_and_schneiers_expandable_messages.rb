@@ -96,7 +96,7 @@ def construct_n_block_message(components, n)
   result
 end
 
-k = ARGV[0].to_i
+k = ARGV[0].nil? ? 6 : ARGV[0].to_i
 block_min = [k + 2, 2**(k-1)].max
 block_max = [2**k, block_min + 1].max
 message_length = SecureRandom.random_number((16 * block_min)..(16 * block_max))
